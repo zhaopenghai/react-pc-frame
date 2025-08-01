@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="1000" height="600">
+    <!-- 背景与标题 -->
+    <rect width="100%" height="100%" fill="#f9f9f9" rx="10" ry="10"/>
+    <text x="500" y="50" font-family="Arial, sans-serif" font-size="30" font-weight="bold" text-anchor="middle" fill="#2c3e50">Medprompt算法流程</text>
+    <text x="500" y="80" font-family="Arial, sans-serif" font-size="18" text-anchor="middle" fill="#555">预处理阶段 + 推理阶段</text>
+
+    <!-- 分隔线 -->
+    <line x1="100" y1="100" x2="900" y2="100" stroke="#ddd" stroke-width="2"/>
+
+    <!-- 预处理阶段 -->
+    <text x="200" y="140" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#3498db">预处理阶段</text>
+
+    <!-- 步骤1：输入开发数据 -->
+    <rect x="100" y="170" width="180" height="60" rx="8" ry="8" fill="#e3f2fd" stroke="#3498db" stroke-width="2"/>
+    <text x="190" y="205" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#2c3e50">输入开发数据D</text>
+
+    <!-- 步骤2：生成嵌入向量 -->
+    <rect x="320" y="170" width="220" height="60" rx="8" ry="8" fill="#e3f2fd" stroke="#3498db" stroke-width="2"/>
+    <text x="430" y="195" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#2c3e50">生成嵌入向量</text>
+    <text x="430" y="215" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#555">text-embedding-ada-002</text>
+
+    <!-- 步骤3：生成CoT与答案 -->
+    <rect x="580" y="170" width="220" height="60" rx="8" ry="8" fill="#e3f2fd" stroke="#3498db" stroke-width="2"/>
+    <text x="690" y="195" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#2c3e50">生成CoT与答案</text>
+    <text x="690" y="215" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#555">GPT-4推理</text>
+
+    <!-- 步骤4：存储正确样本 -->
+    <rect x="840" y="170" width="180" height="60" rx="8" ry="8" fill="#e8f5e9" stroke="#2ecc71" stroke-width="2"/>
+    <text x="930" y="205" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#2c3e50">存储正确样本</text>
+
+    <!-- 预处理箭头 -->
+    <line x1="280" y1="200" x2="320" y2="200" stroke="#3498db" stroke-width="2"/>
+    <polygon points="320,195 320,205 330,200" fill="#3498db"/>
+    <line x1="540" y1="200" x2="580" y2="200" stroke="#3498db" stroke-width="2"/>
+    <polygon points="580,195 580,205 590,200" fill="#3498db"/>
+    <line x1="800" y1="200" x2="840" y2="200" stroke="#3498db" stroke-width="2"/>
+    <polygon points="840,195 840,205 850,200" fill="#3498db"/>
+
+    <!-- 推理阶段 -->
+    <text x="200" y="290" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#e67e22">推理阶段</text>
+
+    <!-- 步骤5：输入测试问题 -->
+    <rect x="100" y="320" width="180" height="60" rx="8" ry="8" fill="#fff3e0" stroke="#e67e22" stroke-width="2"/>
+    <text x="190" y="355" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#2c3e50">输入测试问题Q</text>
+
+    <!-- 步骤6：KNN选择相似示例 -->
+    <rect x="320" y="320" width="220" height="60" rx="8" ry="8" fill="#fff3e0" stroke="#e67e22" stroke-width="2"/>
+    <text x="430" y="345" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#2c3e50">KNN选择相似示例</text>
+    <text x="430" y="365" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#555">k=5（余弦相似度）</text>
+
+    <!-- 步骤7：生成多个推理结果 -->
+    <rect x="580" y="320" width="220" height="60" rx="8" ry="8" fill="#fff3e0" stroke="#e67e22" stroke-width="2"/>
+    <text x="690" y="345" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#2c3e50">生成多个推理结果</text>
+    <text x="690" y="365" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#555">5次答案洗牌集成</text>
+
+    <!-- 步骤8：多数投票输出 -->
+    <rect x="840" y="320" width="180" height="60" rx="8" ry="8" fill="#ffebee" stroke="#e74c3c" stroke-width="2"/>
+    <text x="930" y="355" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#2c3e50">多数投票输出</text>
+
+    <!-- 推理箭头 -->
+    <line x1="280" y1="350" x2="320" y2="350" stroke="#e67e22" stroke-width="2"/>
+    <polygon points="320,345 320,355 330,350" fill="#e67e22"/>
+    <line x1="540" y1="350" x2="580" y2="350" stroke="#e67e22" stroke-width="2"/>
+    <polygon points="580,345 580,355 590,350" fill="#e67e22"/>
+    <line x1="800" y1="350" x2="840" y2="350" stroke="#e67e22" stroke-width="2"/>
+    <polygon points="840,345 840,355 850,350" fill="#e67e22"/>
+
+    <!-- 连接预处理与推理阶段的箭头 -->
+    <line x1="430" y1="230" x2="430" y2="290" stroke="#999" stroke-width="2" stroke-dasharray="5,5"/>
+    <polygon points="425,290 435,290 430,300" fill="#999"/>
+
+    <!-- 底部标注 -->
+    <text x="500" y="450" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#555">Algorithm 1流程可视化 | 基于论文2311.16452v1</text>
+
+    <!-- 页脚 -->
+    <rect x="0" y="550" width="1000" height="50" fill="#f5f5f5" rx="0" ry="0"/>
+    <text x="500" y="580" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#777">Medprompt方法流程图 | 第X页 / 共Y页</text>
+</svg>
