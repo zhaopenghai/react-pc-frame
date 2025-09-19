@@ -1,12 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Layout, Menu, Spin, Alert } from 'antd';
-import { Link, useLocation } from 'react-router-dom';
-import {
-  BarChartOutlined,
-  DashboardOutlined,
-  HomeOutlined,
-  SettingOutlined,
-} from '@ant-design/icons';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { buildMenuItems } from '@/utils/menu';
+import { routes } from '@/routes';
 
 interface SidebarProps {
   collapsed: boolean;
@@ -17,31 +13,6 @@ interface SidebarProps {
 }
 
 const { Sider } = Layout;
-// 侧边栏菜单项
-const menuItems = [
-  {
-    key: 'home',
-    icon: <HomeOutlined />,
-    label: <Link to="/">首页</Link>,
-  },
-  {
-    key: 'dashboard',
-    icon: <DashboardOutlined />,
-    label: <Link to="/dashboard">仪表盘</Link>,
-    children: [
-      {
-        key: 'analytics',
-        icon: <BarChartOutlined />,
-        label: <Link to="/dashboard/analytics">数据分析</Link>,
-      },
-      {
-        key: 'settings',
-        icon: <SettingOutlined />,
-        label: <Link to="/dashboard/settings">系统设置</Link>,
-      },
-    ],
-  },
-];
 
 const Sidebar: React.FC<SidebarProps> = ({
   collapsed,
@@ -51,9 +22,64 @@ const Sidebar: React.FC<SidebarProps> = ({
   error = null,
 }) => {
   const location = useLocation();
-  // 获取当前选中的菜单项
-  const pathSnippets = location.pathname.split('/').filter((i) => i);
-  const selectedKeys = pathSnippets.length ? [pathSnippets[0]] : ['home'];
+  const navigate = useNavigate();
+  const [openKeys, setOpenKeys] = useState<string[]>([]);
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+
+  // 根据当前路径更新状态
+  useEffect(() => {
+    const pathSnippets = location.pathname.split('/').filter((i) => i);
+
+    if (pathSnippets.length > 0) {
+      setSelectedKeys([pathSnippets[pathSnippets.length - 1]]);
+    } else {
+      setSelectedKeys(['home']);
+    }
+
+    // 根据路径自动展开对应的父级菜单
+    const getParentKeys = () => {
+      if (
+        location.pathname.includes('/dashboard/analytics') ||
+        location.pathname.includes('/dashboard/settings')
+      ) {
+        return ['dashboard'];
+      }
+      return [];
+    };
+
+    setOpenKeys(getParentKeys());
+  }, [location.pathname]);
+
+  // 处理菜单点击
+  const handleMenuClick = ({ key }: { key: string }) => {
+    const findPathByKey = (items: any[]): string | null => {
+      for (const item of items) {
+        if (item.key === key && item.path) {
+          return item.path;
+        }
+        if (item.children) {
+          const found = findPathByKey(item.children);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+
+    const path = findPathByKey(routes[0].children || []);
+    if (path) {
+      navigate(path);
+    }
+  };
+
+  // 只允许一个子菜单展开
+  const onOpenChange = (keys: string[]) => {
+    // 只保留最后一个展开的菜单项
+    if (keys.length > 1) {
+      setOpenKeys([keys[keys.length - 1]]);
+    } else {
+      setOpenKeys(keys);
+    }
+  };
 
   return (
     <Sider
@@ -76,7 +102,10 @@ const Sidebar: React.FC<SidebarProps> = ({
           theme="dark"
           mode="inline"
           selectedKeys={selectedKeys}
-          items={menuItems}
+          openKeys={openKeys}
+          items={buildMenuItems(routes[0].children || [])}
+          onClick={handleMenuClick}
+          onOpenChange={onOpenChange}
         />
       )}
     </Sider>

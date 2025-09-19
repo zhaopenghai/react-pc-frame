@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Layout, theme } from 'antd';
+import { Layout, theme, Typography } from 'antd';
 import reactSvg from '@/assets/react.svg';
 import Sidebar from './Sidebar';
 import HeaderBar from './HeaderBar';
 
 const { Content, Footer } = Layout;
+const { Text } = Typography;
 
 const AppLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -68,7 +69,10 @@ const AppLayout: React.FC = () => {
 
         {/* 页脚 */}
         <Footer className="text-center py-[16px] px-0">
-          © {new Date().getFullYear()} 公司名称 - 所有权利保留
+          <Text type="secondary">
+            My AntD App ©{new Date().getFullYear()} | Version:{' '}
+            {import.meta.env.VITE_API_BASE_URL} | Env: {import.meta.env.VITE_ENV}
+          </Text>
         </Footer>
       </Layout>
     </Layout>

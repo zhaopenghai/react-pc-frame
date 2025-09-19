@@ -1,6 +1,6 @@
-// src/components/Layout/HeaderBar.tsx
 import React from 'react';
 import { Layout, Breadcrumb, Avatar, Dropdown, Space } from 'antd';
+import { Link, useLocation } from 'react-router-dom';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -8,6 +8,8 @@ import {
   LogoutOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
+import { routes } from '@/routes';
+import { findRoutePath } from '@/utils/routerHelper';
 
 interface HeaderBarProps {
   collapsed: boolean;
@@ -20,19 +22,19 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
   onToggle,
   colorBgContainer,
 }) => {
+  const location = useLocation();
+
   // 用户下拉菜单
   const userDropdownItems: MenuProps['items'] = [
-    {
-      key: 'profile',
-      icon: <UserOutlined />,
-      label: '个人中心',
-    },
-    {
-      key: 'logout',
-      icon: <LogoutOutlined />,
-      label: '退出登录',
-    },
+    { key: 'profile', icon: <UserOutlined />, label: '个人中心' },
+    { key: 'logout', icon: <LogoutOutlined />, label: '退出登录' },
   ];
+
+  // 自动生成面包屑
+  const { breadcrumb } = findRoutePath(
+    routes[0].children || [],
+    location.pathname
+  );
 
   return (
     <Layout.Header
@@ -47,17 +49,19 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
               className:
                 'text-[18px] cursor-pointer transition-colors duration-300 hover:text-[#1890ff]',
               onClick: onToggle,
-              style: {
-                display: 'flex',
-                alignItems: 'center', // 确保图标自身垂直居中
-                height: '100%', // 继承父容器高度
-              },
+              style: { display: 'flex', alignItems: 'center', height: '100%' },
             }
           )}
-          <Breadcrumb>
-            <Breadcrumb.Item>首页</Breadcrumb.Item>
-            <Breadcrumb.Item>当前页面</Breadcrumb.Item>
-          </Breadcrumb>
+
+          <Breadcrumb
+            items={breadcrumb.map((item) => ({
+              title: item.path ? (
+                <Link to={item.path}>{item.title}</Link>
+              ) : (
+                item.title
+              ),
+            }))}
+          />
         </Space>
 
         <Dropdown menu={{ items: userDropdownItems }} placement="bottomRight">
